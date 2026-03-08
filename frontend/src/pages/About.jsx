@@ -1,3 +1,35 @@
+import CountUp from "react-countup";
+import { useRef, useState, useEffect } from "react";
+
+const useInView = (ref) => {
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setInView(true);
+      },
+      { threshold: 0.3 },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [ref]);
+  return inView;
+};
+
+const StatCard = ({ end, suffix, label }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref);
+
+  return (
+    <div ref={ref} className="text-center p-6 bg-white rounded-xl shadow">
+      <p className="text-3xl font-bold text-primary">
+        {inView ? <CountUp end={end} duration={2.5} suffix={suffix} /> : "0"}
+      </p>
+      <p className="text-gray-500 mt-1">{label}</p>
+    </div>
+  );
+};
+
 const About = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-16">
@@ -29,20 +61,10 @@ const About = () => {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
-        {[
-          { num: "5000+", label: "Happy Patients" },
-          { num: "15+", label: "Years Experience" },
-          { num: "10+", label: "Expert Dentists" },
-          { num: "20+", label: "Services" },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="text-center p-6 bg-white rounded-xl shadow"
-          >
-            <p className="text-3xl font-bold text-primary">{s.num}</p>
-            <p className="text-gray-500 mt-1">{s.label}</p>
-          </div>
-        ))}
+        <StatCard end={5000} suffix="+" label="Happy Patients" />
+        <StatCard end={15} suffix="+" label="Years Experience" />
+        <StatCard end={10} suffix="+" label="Expert Dentists" />
+        <StatCard end={20} suffix="+" label="Services" />
       </div>
     </div>
   );
