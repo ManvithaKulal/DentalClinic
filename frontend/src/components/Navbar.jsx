@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -6,6 +6,9 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const Navbar = () => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname === path;
 
   const links = [
     { to: "/", label: "Home" },
@@ -29,7 +32,11 @@ const Navbar = () => {
             <Link
               key={l.to}
               to={l.to}
-              className="text-gray-700 hover:text-primary transition"
+              className={`transition font-medium ${
+                isActive(l.to)
+                  ? "text-primary border-b-2 border-primary pb-1"
+                  : "text-gray-700 hover:text-primary"
+              }`}
             >
               {l.label}
             </Link>
@@ -37,7 +44,11 @@ const Navbar = () => {
           {user && user.role === "admin" && (
             <Link
               to="/admin/dashboard"
-              className="text-gray-700 hover:text-primary transition"
+              className={`transition font-medium ${
+                location.pathname.startsWith("/admin")
+                  ? "text-primary border-b-2 border-primary pb-1"
+                  : "text-gray-700 hover:text-primary"
+              }`}
             >
               Admin
             </Link>
@@ -76,7 +87,11 @@ const Navbar = () => {
             <Link
               key={l.to}
               to={l.to}
-              className="block text-gray-700 hover:text-primary"
+              className={`block font-medium ${
+                isActive(l.to)
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"
+              }`}
               onClick={() => setOpen(false)}
             >
               {l.label}
@@ -85,7 +100,11 @@ const Navbar = () => {
           {user && user.role === "admin" && (
             <Link
               to="/admin/dashboard"
-              className="block text-gray-700 hover:text-primary"
+              className={`block font-medium ${
+                location.pathname.startsWith("/admin")
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"
+              }`}
               onClick={() => setOpen(false)}
             >
               Admin
