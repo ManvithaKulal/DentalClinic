@@ -6,6 +6,7 @@ import Gallery from "../pages/Gallery";
 import FAQ from "../pages/FAQ";
 import Contact from "../pages/Contact";
 import BookAppointment from "../pages/BookAppointment";
+import MyAppointments from "../pages/MyAppointments";
 import Login from "../pages/Login";
 import Dashboard from "../pages/admin/Dashboard";
 import Patients from "../pages/admin/Patients";
@@ -23,6 +24,7 @@ const AppRoutes = () => {
       <Route path="/faq" element={<FAQ />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/book" element={<BookAppointment />} />
+      <Route path="/my-appointments" element={<MyAppointments />} />
       <Route path="/login" element={<Login />} />
 
       {/* Admin routes */}

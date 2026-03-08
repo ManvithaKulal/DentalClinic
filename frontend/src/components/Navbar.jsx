@@ -64,9 +64,21 @@ const Navbar = () => {
               Login
             </Link>
           ) : (
-            <span className="text-sm text-gray-500">
-              Hi, {user.name || "User"}
-            </span>
+            <>
+              <Link
+                to="/my-appointments"
+                className={`transition font-medium ${
+                  isActive("/my-appointments")
+                    ? "text-primary border-b-2 border-primary pb-1"
+                    : "text-gray-700 hover:text-primary"
+                }`}
+              >
+                My Appointments
+              </Link>
+              <span className="text-sm text-gray-500">
+                Hi, {user.name || "User"}
+              </span>
+            </>
           )}
         </div>
 
@@ -117,6 +129,19 @@ const Navbar = () => {
           >
             Book Appointment
           </Link>
+          {user && (
+            <Link
+              to="/my-appointments"
+              className={`block font-medium ${
+                isActive("/my-appointments")
+                  ? "text-primary"
+                  : "text-gray-700 hover:text-primary"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              My Appointments
+            </Link>
+          )}
           {!user && (
             <Link
               to="/login"
