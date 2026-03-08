@@ -12,6 +12,9 @@ const contactRoutes = require("./routes/contactRoutes");
 
 const app = express();
 
+// Trust proxy (needed for secure cookies behind Render/Heroku)
+app.set("trust proxy", 1);
+
 // Middleware
 app.use(
   cors({
@@ -22,6 +25,8 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const isProduction = process.env.NODE_ENV === "production";
+
 // Session
 app.use(
   session({
@@ -30,6 +35,9 @@ app.use(
     saveUninitialized: false,
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      httpOnly: true,
     },
   }),
 );
