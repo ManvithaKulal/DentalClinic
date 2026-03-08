@@ -10,15 +10,25 @@ router.get(
 );
 
 // Google OAuth callback
-router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: process.env.CLIENT_URL + "/login",
-  }),
-  (req, res) => {
-    res.redirect(process.env.CLIENT_URL);
-  },
-);
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user) => {
+    if (err) {
+      console.error("Google OAuth error:", err);
+      return res.redirect(process.env.CLIENT_URL + "/login");
+    }
+    if (!user) {
+      console.error("Google OAuth: no user returned");
+      return res.redirect(process.env.CLIENT_URL + "/login");
+    }
+    req.logIn(user, (loginErr) => {
+      if (loginErr) {
+        console.error("Session login error:", loginErr);
+        return res.redirect(process.env.CLIENT_URL + "/login");
+      }
+      return res.redirect(process.env.CLIENT_URL);
+    });
+  })(req, res, next);
+});
 
 // Get current user
 router.get("/me", authController.getMe);
