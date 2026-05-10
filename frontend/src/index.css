@@ -16,6 +16,15 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
   * {
     @apply antialiased;
   }
