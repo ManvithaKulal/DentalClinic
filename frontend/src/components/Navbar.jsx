@@ -1,7 +1,23 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaBars, FaCalendarCheck, FaTimes, FaTooth } from "react-icons/fa";
+
+const links = [
+  { to: "/", label: "Home" },
+  { to: "/about", label: "About" },
+  { to: "/services", label: "Services" },
+  { to: "/gallery", label: "Gallery" },
+  { to: "/faq", label: "FAQ" },
+  { to: "/contact", label: "Contact" },
+];
+
+const navLinkClass = (active) =>
+  `rounded-full px-3 py-2 text-sm font-semibold transition ${
+    active
+      ? "bg-primary/10 text-primary"
+      : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+  }`;
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -9,148 +25,138 @@ const Navbar = () => {
   const location = useLocation();
 
   const isActive = (path) => location.pathname === path;
+  const isAdminPath = location.pathname.startsWith("/admin");
 
-  const links = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About" },
-    { to: "/services", label: "Services" },
-    { to: "/gallery", label: "Gallery" },
-    { to: "/faq", label: "FAQ" },
-    { to: "/contact", label: "Contact" },
-  ];
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-primary">
-          🦷 DentalCare
+    <nav className="sticky top-0 z-50 border-b border-white/60 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 rounded-full px-2 py-1 transition hover:bg-slate-100"
+        >
+          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-primary to-teal-400 text-white shadow">
+            <FaTooth />
+          </span>
+          <span className="text-lg font-bold text-slate-900">DentalCare</span>
         </Link>
 
-        {/* Desktop */}
-        <div className="hidden md:flex items-center gap-6">
+        <div className="hidden items-center gap-2 md:flex">
           {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`transition font-medium ${
-                isActive(l.to)
-                  ? "text-primary border-b-2 border-primary pb-1"
-                  : "text-gray-700 hover:text-primary"
-              }`}
-            >
+            <Link key={l.to} to={l.to} className={navLinkClass(isActive(l.to))}>
               {l.label}
             </Link>
           ))}
-          {user && user.role === "admin" && (
+          {user?.role === "admin" && (
             <Link
               to="/admin/dashboard"
-              className={`transition font-medium ${
-                location.pathname.startsWith("/admin")
-                  ? "text-primary border-b-2 border-primary pb-1"
-                  : "text-gray-700 hover:text-primary"
-              }`}
+              className={navLinkClass(isAdminPath)}
             >
               Admin
             </Link>
           )}
-          <Link
-            to="/book"
-            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-dark transition"
-          >
-            Book Appointment
-          </Link>
-          {!user ? (
-            <Link to="/login" className="text-primary font-medium">
-              Login
-            </Link>
-          ) : (
+        </div>
+
+        <div className="hidden items-center gap-3 md:flex">
+          {user ? (
             <>
               <Link
                 to="/my-appointments"
-                className={`transition font-medium ${
-                  isActive("/my-appointments")
-                    ? "text-primary border-b-2 border-primary pb-1"
-                    : "text-gray-700 hover:text-primary"
-                }`}
+                className={navLinkClass(isActive("/my-appointments"))}
               >
                 My Appointments
               </Link>
-              <span className="text-sm text-gray-500">
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-600">
                 Hi, {user.name || "User"}
               </span>
             </>
+          ) : (
+            <Link
+              to="/login"
+              className="text-sm font-semibold text-primary transition hover:text-primary-dark"
+            >
+              Login
+            </Link>
           )}
+          <Link to="/book" className="btn-primary !px-4 !py-2.5 !text-sm">
+            <FaCalendarCheck />
+            <span className="ml-2">Book Appointment</span>
+          </Link>
         </div>
 
-        {/* Mobile toggle */}
         <button
-          className="md:hidden text-2xl text-gray-700"
-          onClick={() => setOpen(!open)}
+          type="button"
+          className="rounded-xl border border-slate-200 bg-white p-2 text-slate-700 transition hover:bg-slate-100 md:hidden"
+          onClick={() => setOpen((prev) => !prev)}
           aria-label="Toggle menu"
+          aria-expanded={open}
         >
           {open ? <FaTimes /> : <FaBars />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white border-t px-4 pb-4 space-y-3">
-          {links.map((l) => (
-            <Link
-              key={l.to}
-              to={l.to}
-              className={`block font-medium ${
-                isActive(l.to)
-                  ? "text-primary"
-                  : "text-gray-700 hover:text-primary"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              {l.label}
-            </Link>
-          ))}
-          {user && user.role === "admin" && (
-            <Link
-              to="/admin/dashboard"
-              className={`block font-medium ${
-                location.pathname.startsWith("/admin")
-                  ? "text-primary"
-                  : "text-gray-700 hover:text-primary"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              Admin
-            </Link>
-          )}
-          <Link
-            to="/book"
-            className="block bg-primary text-white text-center px-4 py-2 rounded-lg"
-            onClick={() => setOpen(false)}
-          >
-            Book Appointment
-          </Link>
-          {user && (
-            <Link
-              to="/my-appointments"
-              className={`block font-medium ${
-                isActive("/my-appointments")
-                  ? "text-primary"
-                  : "text-gray-700 hover:text-primary"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              My Appointments
-            </Link>
-          )}
-          {!user && (
-            <Link
-              to="/login"
-              className="block text-primary font-medium"
-              onClick={() => setOpen(false)}
-            >
-              Login
-            </Link>
-          )}
+        <div className="md:hidden">
+          <div className="mx-4 mb-4 rounded-2xl border border-white/60 bg-white/95 p-4 shadow-lg backdrop-blur">
+            <div className="space-y-1">
+              {links.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  className={`block rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                    isActive(l.to)
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  {l.label}
+                </Link>
+              ))}
+
+              {user?.role === "admin" && (
+                <Link
+                  to="/admin/dashboard"
+                  className={`block rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                    isAdminPath
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  Admin
+                </Link>
+              )}
+
+              {user && (
+                <Link
+                  to="/my-appointments"
+                  className={`block rounded-xl px-3 py-2 text-sm font-semibold transition ${
+                    isActive("/my-appointments")
+                      ? "bg-primary/10 text-primary"
+                      : "text-slate-700 hover:bg-slate-100"
+                  }`}
+                >
+                  My Appointments
+                </Link>
+              )}
+            </div>
+
+            <div className="mt-4 flex items-center gap-3">
+              <Link to="/book" className="btn-primary w-full !py-2.5 !text-sm">
+                Book Appointment
+              </Link>
+              {!user && (
+                <Link
+                  to="/login"
+                  className="btn-outline w-full !py-2.5 !text-sm text-center"
+                >
+                  Login
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </nav>

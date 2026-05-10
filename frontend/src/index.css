@@ -1,12 +1,117 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family:
-    "Inter",
-    system-ui,
-    -apple-system,
-    sans-serif;
-  @apply bg-gray-50 text-gray-900;
+:root {
+  --brand-50: #ecfeff;
+  --brand-100: #cffafe;
+  --brand-500: #0f766e;
+  --brand-600: #0e6862;
+  --brand-700: #115e59;
+  --ink-900: #0f172a;
+  --ink-700: #334155;
+  --ink-500: #64748b;
+}
+
+@layer base {
+  * {
+    @apply antialiased;
+  }
+
+  body {
+    font-family: "Manrope", system-ui, -apple-system, sans-serif;
+    color: var(--ink-900);
+    background:
+      radial-gradient(900px 450px at 10% -10%, rgba(14, 116, 110, 0.15), transparent 60%),
+      radial-gradient(700px 400px at 100% 0%, rgba(14, 165, 160, 0.1), transparent 55%),
+      #f8fafc;
+    @apply min-h-screen;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Sora", "Manrope", sans-serif;
+    @apply tracking-tight;
+  }
+
+  ::selection {
+    background: rgba(14, 116, 110, 0.2);
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8;
+  }
+
+  .section-title {
+    @apply text-3xl font-bold text-slate-900 md:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-3 max-w-2xl text-slate-600;
+  }
+
+  .card-surface {
+    @apply rounded-2xl border border-white/70 bg-white/80 shadow-md backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold text-white transition duration-300;
+    background: linear-gradient(135deg, var(--brand-500), #0ea5a0);
+    box-shadow: 0 10px 22px rgba(15, 118, 110, 0.24);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(15, 118, 110, 0.3);
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold transition duration-300;
+    color: var(--brand-700);
+    border-color: rgba(15, 118, 110, 0.35);
+    background: rgba(255, 255, 255, 0.72);
+  }
+
+  .btn-outline:hover {
+    @apply text-white;
+    background: var(--brand-500);
+    border-color: var(--brand-500);
+    transform: translateY(-1px);
+  }
+
+  .label-text {
+    @apply mb-2 block text-sm font-semibold text-slate-700;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-slate-800 outline-none transition duration-200;
+  }
+
+  .field:focus {
+    border-color: rgba(15, 118, 110, 0.55);
+    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.12);
+  }
+
+  .fade-up {
+    animation: fadeUp 0.55s ease-out both;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

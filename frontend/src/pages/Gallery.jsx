@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getGalleryImages } from "../api/galleryApi";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
 const getImageSrc = (id) => `${API_URL}/gallery/${id}/image`;
 
 const Gallery = () => {
@@ -20,35 +19,50 @@ const Gallery = () => {
         setLoading(false);
       }
     };
+
     fetchImages();
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-4 text-center">
-        Gallery
-      </h1>
-      <p className="text-gray-500 text-center mb-12">
-        A glimpse into our clinic and the smiles we create.
-      </p>
+    <div className="page-container">
+      <div className="mb-10 text-center">
+        <h1 className="section-title">Gallery</h1>
+        <p className="section-subtitle mx-auto">
+          A glimpse of our clinic spaces, care moments, and healthy smiles.
+        </p>
+      </div>
 
       {loading ? (
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="h-64 animate-pulse rounded-2xl bg-slate-200/70"
+            />
+          ))}
         </div>
       ) : images.length === 0 ? (
-        <p className="text-center text-gray-400">No images yet.</p>
+        <div className="card-surface py-12 text-center">
+          <p className="text-lg font-semibold text-slate-700">No images yet</p>
+          <p className="mt-1 text-sm text-slate-500">
+            Gallery updates will appear here soon.
+          </p>
+        </div>
       ) : (
-        <div className="columns-1 sm:columns-2 md:columns-3 gap-4 space-y-4">
-          {images.map((img) => (
-            <div key={img._id} className="break-inside-avoid">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {images.map((img, idx) => (
+            <article
+              key={img._id}
+              className="card-surface fade-up group overflow-hidden p-2"
+              style={{ animationDelay: `${idx * 80}ms` }}
+            >
               <img
                 src={getImageSrc(img._id)}
-                alt="Gallery"
-                className="w-full rounded-xl shadow-sm hover:shadow-md transition"
+                alt="Dental clinic gallery"
+                className="h-64 w-full rounded-xl object-cover transition duration-500 group-hover:scale-[1.03]"
                 loading="lazy"
               />
-            </div>
+            </article>
           ))}
         </div>
       )}

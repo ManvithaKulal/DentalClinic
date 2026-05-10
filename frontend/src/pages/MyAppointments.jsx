@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { getMyAppointments } from "../api/appointmentApi";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { FaCalendarAlt, FaClock } from "react-icons/fa";
+
+const statusMap = {
+  booked: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  completed: "bg-blue-50 text-blue-700 border-blue-200",
+  cancelled: "bg-rose-50 text-rose-700 border-rose-200",
+};
 
 const MyAppointments = () => {
   const { user } = useAuth();
@@ -11,7 +18,8 @@ const MyAppointments = () => {
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+
+    const fetchAppointments = async () => {
       try {
         const res = await getMyAppointments();
         setAppointments(res.data);
@@ -21,22 +29,18 @@ const MyAppointments = () => {
         setLoading(false);
       }
     };
-    fetch();
+
+    fetchAppointments();
   }, [user]);
 
   if (!user) {
     return (
-      <div className="max-w-xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
-          My Appointments
-        </h2>
-        <p className="text-gray-600 mb-6">
-          Please log in to view your appointments.
+      <div className="page-container max-w-2xl text-center">
+        <h2 className="text-3xl font-bold text-slate-900">My Appointments</h2>
+        <p className="mt-3 text-slate-600">
+          Please sign in to view your appointments.
         </p>
-        <button
-          onClick={() => navigate("/login")}
-          className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition"
-        >
+        <button onClick={() => navigate("/login")} className="btn-primary mt-6">
           Go to Login
         </button>
       </div>
@@ -61,51 +65,65 @@ const MyAppointments = () => {
     return `${displayHour}:${min} ${ampm}`;
   };
 
-  const statusColor = {
-    booked: "bg-blue-100 text-blue-700",
-    completed: "bg-green-100 text-green-700",
-    cancelled: "bg-red-100 text-red-700",
-  };
-
   return (
-    <div className="max-w-3xl mx-auto px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">My Appointments</h1>
+    <div className="page-container max-w-4xl">
+      <div className="mb-8 flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
+        <div>
+          <h1 className="section-title">My Appointments</h1>
+          <p className="mt-2 text-slate-600">
+            Track your upcoming and past visits in one place.
+          </p>
+        </div>
+        <Link to="/book" className="btn-outline !px-5 !py-2.5">
+          Book New Appointment
+        </Link>
+      </div>
 
       {loading ? (
-        <div className="flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="flex justify-center py-10">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-slate-200 border-t-primary"></div>
         </div>
       ) : appointments.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg mb-4">
+        <div className="card-surface py-14 text-center">
+          <p className="text-lg font-semibold text-slate-700">
             You have no appointments yet.
+          </p>
+          <p className="mt-1 text-sm text-slate-500">
+            Start by choosing a date and time that works for you.
           </p>
           <button
             onClick={() => navigate("/book")}
-            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary-dark transition"
+            className="btn-primary mt-6"
           >
             Book an Appointment
           </button>
         </div>
       ) : (
         <div className="space-y-4">
-          {appointments.map((apt) => (
-            <div
+          {appointments.map((apt, idx) => (
+            <article
               key={apt._id}
-              className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-sm"
+              className="card-surface fade-up flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between"
+              style={{ animationDelay: `${idx * 90}ms` }}
             >
               <div>
-                <p className="text-lg font-semibold text-gray-900">
+                <p className="flex items-center gap-2 text-lg font-bold text-slate-900">
+                  <FaCalendarAlt className="text-primary" />
                   {formatDate(apt.date)}
                 </p>
-                <p className="text-gray-500">{formatTime(apt.timeSlot)}</p>
+                <p className="mt-1 flex items-center gap-2 text-slate-600">
+                  <FaClock className="text-primary" />
+                  {formatTime(apt.timeSlot)}
+                </p>
               </div>
               <span
-                className={`inline-block px-3 py-1 rounded-full text-sm font-medium capitalize ${statusColor[apt.status] || "bg-gray-100 text-gray-600"}`}
+                className={`inline-flex rounded-full border px-3 py-1 text-sm font-semibold capitalize ${
+                  statusMap[apt.status] || "bg-slate-100 text-slate-600 border-slate-200"
+                }`}
               >
                 {apt.status}
               </span>
-            </div>
+            </article>
           ))}
         </div>
       )}

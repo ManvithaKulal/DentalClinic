@@ -31,18 +31,18 @@ const CalendarPicker = ({ onDateSelect, selectedDate }) => {
   const prevMonth = () => {
     if (currentMonth === 0) {
       setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
+      setCurrentYear((prev) => prev - 1);
     } else {
-      setCurrentMonth(currentMonth - 1);
+      setCurrentMonth((prev) => prev - 1);
     }
   };
 
   const nextMonth = () => {
     if (currentMonth === 11) {
       setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
+      setCurrentYear((prev) => prev + 1);
     } else {
-      setCurrentMonth(currentMonth + 1);
+      setCurrentMonth((prev) => prev + 1);
     }
   };
 
@@ -63,13 +63,10 @@ const CalendarPicker = ({ onDateSelect, selectedDate }) => {
     return selectedDate === `${yyyy}-${mm}-${dd}`;
   };
 
-  const isToday = (day) => {
-    return (
-      day === today.getDate() &&
-      currentMonth === today.getMonth() &&
-      currentYear === today.getFullYear()
-    );
-  };
+  const isToday = (day) =>
+    day === today.getDate() &&
+    currentMonth === today.getMonth() &&
+    currentYear === today.getFullYear();
 
   const isPast = (day) => {
     const date = new Date(currentYear, currentMonth, day);
@@ -78,87 +75,78 @@ const CalendarPicker = ({ onDateSelect, selectedDate }) => {
 
   const isPrevDisabled =
     currentMonth === today.getMonth() && currentYear === today.getFullYear();
-
   const daysInMonth = getDaysInMonth(currentMonth, currentYear);
   const firstDay = getFirstDayOfMonth(currentMonth, currentYear);
 
-  // Build calendar grid
   const cells = [];
-  for (let i = 0; i < firstDay; i++) {
-    cells.push(null);
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    cells.push(d);
-  }
+  for (let i = 0; i < firstDay; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
 
   return (
-    <div className="mb-8 lg:mb-0">
-      <label className="block text-lg font-semibold text-gray-700 mb-3">
-        Select a Date
-      </label>
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-4">
+    <div className="fade-up">
+      <label className="label-text text-base">Select Appointment Date</label>
+      <div className="card-surface p-5 sm:p-6">
+        <div className="mb-4 flex items-center justify-between">
           <button
+            type="button"
             onClick={prevMonth}
             disabled={isPrevDisabled}
-            className={`p-2 rounded-lg transition ${
+            className={`rounded-xl p-2 transition ${
               isPrevDisabled
-                ? "text-gray-300 cursor-not-allowed"
-                : "text-gray-600 hover:bg-gray-100"
+                ? "cursor-not-allowed text-slate-300"
+                : "text-slate-600 hover:bg-slate-100"
             }`}
             aria-label="Previous month"
           >
             <FaChevronLeft />
           </button>
-          <h3 className="text-lg font-semibold text-gray-900">
+          <h3 className="text-lg font-bold text-slate-900">
             {MONTHS[currentMonth]} {currentYear}
           </h3>
           <button
+            type="button"
             onClick={nextMonth}
-            className="p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition"
+            className="rounded-xl p-2 text-slate-600 transition hover:bg-slate-100"
             aria-label="Next month"
           >
             <FaChevronRight />
           </button>
         </div>
 
-        {/* Day headers */}
-        <div className="grid grid-cols-7 mb-2">
+        <div className="mb-2 grid grid-cols-7">
           {DAYS.map((d) => (
             <div
               key={d}
-              className="text-center text-xs font-semibold text-gray-400 py-1"
+              className="py-1 text-center text-xs font-bold uppercase tracking-wider text-slate-400"
             >
               {d}
             </div>
           ))}
         </div>
 
-        {/* Day cells */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-1.5">
           {cells.map((day, i) =>
             day === null ? (
               <div key={`empty-${i}`} />
             ) : (
               <button
                 key={day}
+                type="button"
                 onClick={() => handleDayClick(day)}
                 disabled={isPast(day)}
-                className={`relative h-10 w-full rounded-xl text-sm font-medium transition
-                  ${
-                    isPast(day)
-                      ? "text-gray-300 cursor-not-allowed"
-                      : isSelected(day)
-                        ? "bg-primary text-white shadow-md"
-                        : isToday(day)
-                          ? "bg-teal-50 text-primary font-bold ring-2 ring-primary/30"
-                          : "text-gray-700 hover:bg-teal-50 hover:text-primary"
-                  }`}
+                className={`relative h-10 rounded-xl text-sm font-semibold transition ${
+                  isPast(day)
+                    ? "cursor-not-allowed text-slate-300"
+                    : isSelected(day)
+                      ? "bg-primary text-white shadow-md"
+                      : isToday(day)
+                        ? "bg-primary/10 text-primary ring-1 ring-primary/30"
+                        : "text-slate-700 hover:bg-slate-100"
+                }`}
               >
                 {day}
                 {isToday(day) && !isSelected(day) && (
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-primary" />
+                  <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-primary" />
                 )}
               </button>
             ),

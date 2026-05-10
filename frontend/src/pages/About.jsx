@@ -1,8 +1,10 @@
 import CountUp from "react-countup";
 import { useRef, useState, useEffect } from "react";
+import { FaHospitalAlt } from "react-icons/fa";
 
 const useInView = (ref) => {
   const [inView, setInView] = useState(false);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -10,9 +12,11 @@ const useInView = (ref) => {
       },
       { threshold: 0.3 },
     );
+
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [ref]);
+
   return inView;
 };
 
@@ -21,11 +25,11 @@ const StatCard = ({ end, suffix, label }) => {
   const inView = useInView(ref);
 
   return (
-    <div ref={ref} className="text-center p-6 bg-white rounded-xl shadow">
-      <p className="text-3xl font-bold text-primary">
+    <div ref={ref} className="card-surface text-center p-6">
+      <p className="text-3xl font-extrabold text-primary">
         {inView ? <CountUp end={end} duration={2.5} suffix={suffix} /> : "0"}
       </p>
-      <p className="text-gray-500 mt-1">{label}</p>
+      <p className="mt-1 text-sm font-medium text-slate-600">{label}</p>
     </div>
   );
 };
@@ -71,78 +75,90 @@ const doctorProfiles = [
 
 const About = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-16">
-      <h1 className="text-4xl font-bold text-gray-900 mb-6">About Us</h1>
-      <div className="grid md:grid-cols-2 gap-12 items-center">
-        <div>
-          <p className="text-gray-600 text-lg leading-relaxed mb-4">
-            At <span className="text-primary font-semibold">DentalCare</span>,
-            we've been providing exceptional dental services for over 15 years.
-            Our mission is to deliver comfortable, affordable, and high-quality
-            dental care to every patient.
+    <div className="page-container">
+      <div className="grid items-center gap-10 lg:grid-cols-2">
+        <div className="fade-up">
+          <p className="mb-3 inline-flex rounded-full bg-primary/10 px-4 py-1 text-sm font-semibold text-primary">
+            About DentalCare
           </p>
-          <p className="text-gray-600 text-lg leading-relaxed mb-4">
-            Our team consists of highly trained dentists, hygienists, and
-            support staff who are passionate about oral health. We use the
-            latest technology and techniques to ensure the best outcomes.
+          <h1 className="section-title">Trusted Care for Every Smile</h1>
+          <p className="mt-4 text-lg leading-relaxed text-slate-600">
+            For over 15 years, DentalCare has provided affordable, high-quality
+            dentistry with a patient-first approach. We blend advanced
+            technology with compassionate care to keep your visits smooth,
+            efficient, and stress-free.
           </p>
-          <p className="text-gray-600 text-lg leading-relaxed">
-            Whether it's a routine check-up, cosmetic dentistry, or emergency
-            care, we're here for you every step of the way.
+          <p className="mt-4 text-slate-600">
+            Whether it is preventive care, cosmetic dentistry, or urgent
+            treatment, our team is committed to clinical excellence and long-term
+            oral health.
           </p>
         </div>
-        <div className="bg-teal-50 rounded-2xl p-10 text-center">
-          <div className="text-8xl mb-4">🏥</div>
-          <h3 className="text-2xl font-bold text-gray-900">15+ Years</h3>
-          <p className="text-gray-500">of Trusted Dental Care</p>
+
+        <div className="card-surface fade-up p-8 sm:p-10">
+          <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-2xl text-primary">
+            <FaHospitalAlt />
+          </div>
+          <h3 className="text-2xl font-bold text-slate-900">15+ Years</h3>
+          <p className="mt-1 text-slate-600">of trusted dental excellence</p>
+          <div className="mt-6 space-y-3 text-sm text-slate-600">
+            <p className="rounded-xl bg-slate-50 px-4 py-2">
+              Evidence-based treatment protocols
+            </p>
+            <p className="rounded-xl bg-slate-50 px-4 py-2">
+              Clear communication and transparent care plans
+            </p>
+            <p className="rounded-xl bg-slate-50 px-4 py-2">
+              Personalized solutions for every age group
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
+      <div className="mt-14 grid grid-cols-2 gap-5 md:grid-cols-4">
         <StatCard end={5000} suffix="+" label="Happy Patients" />
         <StatCard end={15} suffix="+" label="Years Experience" />
         <StatCard end={10} suffix="+" label="Expert Dentists" />
         <StatCard end={20} suffix="+" label="Services" />
       </div>
 
-      {/* Doctor Information */}
       <section className="mt-20">
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900">Meet Our Doctors</h2>
-          <p className="text-gray-600 mt-3 max-w-2xl mx-auto">
-            Our doctors combine strong clinical training with modern treatment
-            methods to provide safe, comfortable, and personalized dental care.
+        <div className="mb-10 text-center">
+          <h2 className="section-title">Meet Our Doctors</h2>
+          <p className="section-subtitle mx-auto">
+            A multidisciplinary team with deep training, modern techniques, and
+            a strong focus on comfortable patient experiences.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {doctorProfiles.map((doctor) => (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {doctorProfiles.map((doctor, idx) => (
             <article
               key={doctor.name}
-              className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="card-surface fade-up overflow-hidden"
+              style={{ animationDelay: `${idx * 130}ms` }}
             >
               <img
                 src={doctor.image}
                 alt={doctor.name}
-                className="w-full h-72 object-cover"
+                className="h-72 w-full object-cover"
                 loading="lazy"
               />
               <div className="p-5">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {doctor.name}
-                </h3>
-                <p className="text-primary font-medium mt-1">{doctor.specialty}</p>
-                <p className="text-gray-600 text-sm mt-3">
-                  <span className="font-semibold text-gray-800">Education:</span>{" "}
+                <h3 className="text-lg font-bold text-slate-900">{doctor.name}</h3>
+                <p className="mt-1 text-sm font-semibold text-primary">
+                  {doctor.specialty}
+                </p>
+                <p className="mt-3 text-sm text-slate-600">
+                  <span className="font-semibold text-slate-800">Education:</span>{" "}
                   {doctor.education}
                 </p>
-                <p className="text-gray-600 text-sm mt-2">
-                  <span className="font-semibold text-gray-800">Experience:</span>{" "}
+                <p className="mt-2 text-sm text-slate-600">
+                  <span className="font-semibold text-slate-800">Experience:</span>{" "}
                   {doctor.experience}
                 </p>
-                <p className="text-gray-600 text-sm mt-2">
-                  <span className="font-semibold text-gray-800">Focus:</span>{" "}
+                <p className="mt-2 text-sm text-slate-600">
+                  <span className="font-semibold text-slate-800">Focus:</span>{" "}
                   {doctor.focus}
                 </p>
               </div>
