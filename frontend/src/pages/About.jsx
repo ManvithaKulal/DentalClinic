@@ -60,7 +60,7 @@ const doctorProfiles = [
     experience: "14+ years",
     focus: "Wisdom tooth surgery, implants, and trauma care.",
     image:
-      "https://images.pexels.com/photos/19438561/pexels-photo-19438561.jpeg?cs=srgb&dl=pexels-oys-photography-838143052-19438561.jpg&fm=jpg",
+      "https://t3.ftcdn.net/jpg/00/96/01/26/360_F_96012689_u6TDoM1XHJ4mBAa6CM3HjL2eEngpn6eX.jpg",
   },
   {
     name: "Dr. Nisha Rao",
@@ -69,7 +69,7 @@ const doctorProfiles = [
     experience: "8+ years",
     focus: "Child-friendly checkups, scaling, and preventive oral care.",
     image:
-      "https://images.pexels.com/photos/5234467/pexels-photo-5234467.jpeg?cs=srgb&dl=pexels-polina-tankilevitch-5234467.jpg&fm=jpg",
+      "https://www.shutterstock.com/image-photo/confident-smiling-dentist-posing-arms-600nw-2627081013.jpg",
   },
 ];
 
@@ -90,8 +90,8 @@ const About = () => {
           </p>
           <p className="mt-4 text-slate-600">
             Whether it is preventive care, cosmetic dentistry, or urgent
-            treatment, our team is committed to clinical excellence and long-term
-            oral health.
+            treatment, our team is committed to clinical excellence and
+            long-term oral health.
           </p>
         </div>
 
@@ -145,16 +145,22 @@ const About = () => {
                 loading="lazy"
               />
               <div className="p-5">
-                <h3 className="text-lg font-bold text-slate-900">{doctor.name}</h3>
+                <h3 className="text-lg font-bold text-slate-900">
+                  {doctor.name}
+                </h3>
                 <p className="mt-1 text-sm font-semibold text-primary">
                   {doctor.specialty}
                 </p>
                 <p className="mt-3 text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">Education:</span>{" "}
+                  <span className="font-semibold text-slate-800">
+                    Education:
+                  </span>{" "}
                   {doctor.education}
                 </p>
                 <p className="mt-2 text-sm text-slate-600">
-                  <span className="font-semibold text-slate-800">Experience:</span>{" "}
+                  <span className="font-semibold text-slate-800">
+                    Experience:
+                  </span>{" "}
                   {doctor.experience}
                 </p>
                 <p className="mt-2 text-sm text-slate-600">

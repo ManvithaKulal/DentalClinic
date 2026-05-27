@@ -82,7 +82,7 @@ const Home = () => {
                 <img
                   src="https://images.pexels.com/photos/31043313/pexels-photo-31043313.jpeg?auto=compress&cs=tinysrgb&w=1200"
                   alt="Smiling dental professional"
-                  className="h-[420px] w-full rounded-xl object-cover"
+                  className="h-[430px] w-full rounded-xl object-cover object-center lg:object-[center_-130px]"
                   loading="lazy"
                 />
                 <div className="absolute bottom-6 left-6 rounded-xl bg-white/90 px-4 py-3 shadow-lg backdrop-blur">
@@ -118,8 +118,8 @@ const Home = () => {
         <div className="mb-10 text-center">
           <h2 className="section-title">Why Patients Choose Us</h2>
           <p className="section-subtitle mx-auto">
-            Built on trust, precision, and a patient experience that feels
-            human from your first call to your follow-up visit.
+            Built on trust, precision, and a patient experience that feels human
+            from your first call to your follow-up visit.
           </p>
         </div>
         <div className="grid gap-6 md:grid-cols-3">
@@ -132,7 +132,9 @@ const Home = () => {
               <div className="mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-xl text-primary">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-bold text-slate-900">{feature.title}</h3>
+              <h3 className="text-xl font-bold text-slate-900">
+                {feature.title}
+              </h3>
               <p className="mt-2 text-slate-600">{feature.desc}</p>
             </article>
           ))}
